@@ -16,5 +16,16 @@ namespace Api.Mappers
             Industry = stockModel.Industry,
             MarketCap = stockModel.MarketCap,
         };
+
+        public static Stock ToStockFromCreateDto(this CreateStockRequestDto stockRequestDto)
+        => new()
+        {
+            Symbol = stockRequestDto.Symbol,
+            CompanyName = stockRequestDto.CompanyName,
+            Purchase = stockRequestDto.Purchase,
+            LastDiv = stockRequestDto.LastDiv,
+            Industry = stockRequestDto.Industry,
+            MarketCap = stockRequestDto.MarketCap
+        };
     }
 }
