@@ -24,5 +24,21 @@
 
         public async Task<Comment?> GetByIdAsync(int id)
         => await this._context.Comments.FindAsync(id);
+
+        public async Task<Comment?> UpdateAsync(int id, Comment commentModel)
+        {
+            var comment = await this._context.Comments.FindAsync(id);
+
+            if (comment is null)
+            {
+                return null;
+            }
+
+            comment.Title = commentModel.Title;
+            comment.Content = commentModel.Content;
+
+            await this._context.SaveChangesAsync();
+            return comment;
+        }
     }
 }
