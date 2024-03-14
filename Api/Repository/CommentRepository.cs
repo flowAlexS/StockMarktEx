@@ -14,5 +14,8 @@
 
         public async Task<List<Comment>> GetAllAsync()
         => await this._context.Comments.ToListAsync();
+
+        public async Task<Comment?> GetByIdAsync(int id)
+        => await this._context.Comments.FindAsync(id);
     }
 }
