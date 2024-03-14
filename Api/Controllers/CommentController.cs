@@ -28,6 +28,16 @@ namespace Api.Controllers
             return Ok(commentsDto);
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById([FromRoute] int id)
+        {
+            var comment = await this._commentRepository.GetByIdAsync(id);
+
+            return comment is null
+                ? NotFound()
+                : Ok(comment);
+        }
+
         [HttpPost("{stockId}")]
         public async Task<IActionResult> Create([FromRoute] int stockId, [FromBody] CreateCommentDto createCommentDto )
         {
@@ -39,7 +49,7 @@ namespace Api.Controllers
             var commentModel = createCommentDto.ToCommentFromCreateDto(stockId);
             await this._commentRepository.CreateAsync(commentModel);
 
-            return CreatedAtAction(nameof(this._commentRepository.GetByIdAsync), new { id = commentModel.Id }, commentModel.ToCommentDto());
+            return CreatedAtAction(nameof(GetById), new { id = commentModel.Id }, commentModel.ToCommentDto());
         }
     }
 }
