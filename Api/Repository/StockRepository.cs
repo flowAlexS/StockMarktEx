@@ -13,27 +13,53 @@ namespace Api.Repository
         public StockRepository(ApplicationDbContext context)
         => this._context = context;
 
-        public Task<Stock> CreateAsync(Stock stockModel)
+        public async Task<Stock> CreateAsync(Stock stockModel)
         {
-            throw new NotImplementedException();
+            await _context.Stocks.AddAsync(stockModel);
+            await _context.SaveChangesAsync();
+
+            return stockModel;
         }
 
-        public Task<Stock?> DeletAsync(int id)
+        public async Task<Stock?> DeletAsync(int id)
         {
-            throw new NotImplementedException();
+            var stockModel = await _context.Stocks.FirstOrDefaultAsync(stock => stock.Id == id);
+
+            if (stockModel is null)
+            {
+                return null;
+            }
+
+            this._context.Stocks.Remove(stockModel);
+            await this._context.SaveChangesAsync();
+
+            return stockModel;
         }
 
-        public Task<List<Stock>> GetAllAsync()
-        => this._context.Stocks.ToListAsync();
+        public async Task<List<Stock>> GetAllAsync()
+        => await this._context.Stocks.ToListAsync();
 
-        public Task<Stock?> GetByIdAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<Stock?> GetByIdAsync(int id)
+        => await this._context.Stocks.FindAsync(id);
 
-        public Task<Stock?> UpdateAsync(int id, UpdateStockRequestDto updateStockRequestDto)
+        public async Task<Stock?> UpdateAsync(int id, UpdateStockRequestDto updateStockRequestDto)
         {
-            throw new NotImplementedException();
+            var existingStock = await this._context.Stocks.FirstOrDefaultAsync(stock => stock.Id == id);
+            
+            if (existingStock is null)
+            {
+                return null;
+            }
+
+            existingStock.Symbol = updateStockRequestDto.Symbol;
+            existingStock.CompanyName = updateStockRequestDto.CompanyName;
+            existingStock.Purchase = updateStockRequestDto.Purchase;
+            existingStock.LastDiv = updateStockRequestDto.LastDiv;
+            existingStock.Industry = updateStockRequestDto.Industry;
+            existingStock.MarketCap = updateStockRequestDto.MarketCap;
+
+            await this._context.SaveChangesAsync();
+            return existingStock;
         }
     }
 }
