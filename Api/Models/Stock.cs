@@ -2,6 +2,7 @@
 {
     using System.ComponentModel.DataAnnotations.Schema;
 
+    [Table("Stocks")]
     public class Stock
     {
         public int Id { get; set; }
@@ -21,5 +22,7 @@
         public long MarketCap { get; set; }
 
         public List<Comment> Comments { get; set; } = new List<Comment>();
+
+        public List<Portofolio> Portofolios { get; set; } = new List<Portofolio>();
     }
 }
