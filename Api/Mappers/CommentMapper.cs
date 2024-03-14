@@ -11,8 +11,17 @@ namespace Api.Mappers
             Id = comment.Id,
             Title = comment.Title,
             Content = comment.Content,
+
             CreatedOn = comment.CreatedOn,
             StockId = comment.StockId,
+        };
+
+        public static Comment ToCommentFromCreateDto(this CreateCommentDto createCommentDto, int stockId)
+        => new()
+        {
+            Title = createCommentDto.Title,
+            Content = createCommentDto.Content,
+            StockId = stockId,
         };
     }
 }

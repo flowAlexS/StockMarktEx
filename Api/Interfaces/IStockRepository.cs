@@ -14,5 +14,7 @@
         Task<Stock?> UpdateAsync(int id, UpdateStockRequestDto updateStockRequestDto);
 
         Task<Stock?> DeletAsync(int id);
+
+        Task<bool> StockExists(int id);
     }
 }

@@ -12,6 +12,13 @@
         public CommentRepository(ApplicationDbContext context)
         => this._context = context;
 
+        public async Task<Comment> CreateAsync(Comment commentModel)
+        {
+            await this._context.Comments.AddAsync(commentModel);
+            await this._context.SaveChangesAsync();
+            return commentModel;
+        }
+
         public async Task<List<Comment>> GetAllAsync()
         => await this._context.Comments.ToListAsync();
 
