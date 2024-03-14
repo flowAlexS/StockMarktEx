@@ -10,6 +10,8 @@
 
         Task<Stock?> GetByIdAsync(int id);
 
+        Task<Stock?> GetBySymbol(string symbol);
+
         Task<Stock> CreateAsync(Stock stockModel);
 
         Task<Stock?> UpdateAsync(int id, UpdateStockRequestDto updateStockRequestDto);

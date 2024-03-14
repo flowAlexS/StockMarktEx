@@ -12,6 +12,13 @@ namespace Api.Repository
         public PortofolioRepository(ApplicationDbContext context)
         => this._context = context;
 
+        public async Task<Portofolio> CreatePortofolioAsync(Portofolio portofolio)
+        {
+            await _context.AddAsync(portofolio);
+            await _context.SaveChangesAsync();
+            return portofolio;
+        }
+
         public async Task<List<Stock>> GetUserPortofolio(AppUser user)
         => await this._context.Portofolios.Where(u => u.AppUserId == user.Id)
             .Select(stock => new Stock()
