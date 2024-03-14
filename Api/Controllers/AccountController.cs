@@ -1,8 +1,10 @@
 ﻿using Api.DTOs.Account;
 using Api.Interfaces;
 using Api.Models;
+using Microsoft.AspNetCore.Http.Metadata;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Api.Controllers
 {
@@ -13,11 +15,13 @@ namespace Api.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly ITokenService _tokenService;
+        private readonly SignInManager<AppUser> _signInManager;
 
-        public AccountController(UserManager<AppUser> userManager, ITokenService tokenService)
+        public AccountController(UserManager<AppUser> userManager, ITokenService tokenService, SignInManager<AppUser> signInManager)
         {
             this._userManager = userManager;
             this._tokenService = tokenService;
+            this._signInManager = signInManager;
         }
 
         [HttpPost("register")]
@@ -64,6 +68,36 @@ namespace Api.Controllers
             {
                 return StatusCode(500, ex.Message);
             }
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = await this._userManager.Users.FirstOrDefaultAsync(x => x.UserName.Equals(loginDto.UserName));
+
+            if (user is null)
+            {
+                return Unauthorized("Invalid Username");
+            }
+            
+            var result = await this._signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
+
+            if (!result.Succeeded)
+            {
+                return Unauthorized("Username or Password not found");
+            }
+
+            return Ok(new NewUserDto()
+            {
+                UserName = loginDto.UserName,
+                Email = user.Email,
+                Token = _tokenService.CreateToken(user)
+            });
         }
     }
 }
