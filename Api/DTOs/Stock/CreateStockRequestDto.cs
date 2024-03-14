@@ -24,6 +24,8 @@ namespace Api.DTOs.Stock
         [MaxLength(10, ErrorMessage = "Industry name cannot be larger than 10 characters")]
         public string Industry { get; set; } = string.Empty;
 
+        [Required]
+        [Range(1, 5000000000)]
         public long MarketCap { get; set; }
     }
 }

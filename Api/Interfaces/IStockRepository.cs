@@ -1,11 +1,12 @@
 ﻿namespace Api.Interfaces
 {
     using Api.DTOs.Stock;
+    using Api.Helpers;
     using Api.Models;
 
     public interface IStockRepository
     {
-        Task<List<Stock>> GetAllAsync();
+        Task<List<Stock>> GetAllAsync(QueryObject query);
 
         Task<Stock?> GetByIdAsync(int id);
 
